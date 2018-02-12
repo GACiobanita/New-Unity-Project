@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+// test pt fratii mei de pe github
 public class BasicBulletMovement : MonoBehaviour {
 
     private Rigidbody2D controller;
@@ -33,6 +33,6 @@ public class BasicBulletMovement : MonoBehaviour {
     private void OnBecameInvisible()
     {
         //object is deactivated 
-        this.gameObject.SetActive(false);
+        this.gameObject.SetActive(false); 
     }
 }
