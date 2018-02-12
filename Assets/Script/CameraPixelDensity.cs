@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+//githubtest
 //scale the camera view with the screen of the hardware
 public class CameraPixelDensity : MonoBehaviour {
 
