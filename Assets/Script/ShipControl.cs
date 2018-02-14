@@ -13,6 +13,8 @@ public class ShipControl : MonoBehaviour {
     public GameObject bulletSpawnPoint;
     //the rigidbody2d component of the ship
     private Rigidbody2D controller;
+    //ship sprite size
+    float shipWidth;
     //Vector3 lastPosition;//Debug, remove later
     //float speed;//Debug, remove later
 
@@ -23,26 +25,19 @@ public class ShipControl : MonoBehaviour {
         //speed = 0.0f;
         //get the ship's rigidbody2d component, setting it in the controller variable
         controller = GetComponent<Rigidbody2D>();
+        //get the width of the ship size divided by 100(the sprite pixel per unit), we can do this better but how
+        shipWidth = GetComponent<SpriteRenderer>().bounds.size.x/10;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
         //if there is joystick input
-        if(moveJoystick.inputDirection!=Vector3.zero)
+        if (moveJoystick.inputDirection!=Vector3.zero)
         {
             //get the joystick direction, and move in that direction, Time.deltaTime used to tie the calculation to framerate
             Vector3 movement = moveJoystick.inputDirection.normalized * moveSpeed * Time.deltaTime;
             //check if the future position is within bounds
-            if (GameArea.sharedInstance.CheckPosition(controller.transform.position + movement))
-            {
-                //if it is, move the ship
-                controller.MovePosition(controller.transform.position + movement);
-                //Debug code for velocity, remove later
-                //speed = (transform.position - lastPosition).magnitude;
-                //Debug.Log(speed);
-                //lastPosition = transform.position;
-            }
+            controller.MovePosition(GameArea.sharedInstance.CheckPosition(controller.transform.position + movement, moveJoystick.inputDirection.normalized, shipWidth));
         }
         //Debug Shoot code, can't test on pc using the thumbstick and buttons so we need keyboard controls
         if(Input.GetKeyDown(KeyCode.Space))
