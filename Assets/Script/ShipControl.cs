@@ -26,7 +26,7 @@ public class ShipControl : MonoBehaviour {
         //get the ship's rigidbody2d component, setting it in the controller variable
         controller = GetComponent<Rigidbody2D>();
         //get the width of the ship size divided by 100(the sprite pixel per unit), we can do this better but how
-        shipWidth = GetComponent<SpriteRenderer>().bounds.size.x/10;
+        shipWidth = GetComponent<SpriteRenderer>().bounds.size.x;
 	}
 	
 	// Update is called once per frame
