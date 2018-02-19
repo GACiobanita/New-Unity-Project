@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ShipControl : MonoBehaviour {
 
+    public static ShipControl sharedInstance;
     public float moveSpeed=5.0f;
     //real drag?
     public float drag=0.5f;
@@ -13,11 +14,11 @@ public class ShipControl : MonoBehaviour {
     public GameObject bulletSpawnPoint;
     //the rigidbody2d component of the ship
     private Rigidbody2D controller;
-    //ship sprite size
-    float shipWidth;
-    //Vector3 lastPosition;//Debug, remove later
-    //float speed;//Debug, remove later
-
+    //firerate interval, less means faster
+    public float shotInterval = 0.5f;
+    float nextShot = 0.0f;
+    //trigger shooting from the UI shoot button
+    bool allowShot = false;
 
     // Use this for initialization
     void Start () {
@@ -25,25 +26,46 @@ public class ShipControl : MonoBehaviour {
         //speed = 0.0f;
         //get the ship's rigidbody2d component, setting it in the controller variable
         controller = GetComponent<Rigidbody2D>();
-        //get the width of the ship size divided by 100(the sprite pixel per unit), we can do this better but how
-        shipWidth = GetComponent<SpriteRenderer>().bounds.size.x;
+        sharedInstance = this;
 	}
 	
 	// Update is called once per frame
-	void Update () {
-        //if there is joystick input
-        if (moveJoystick.inputDirection!=Vector3.zero)
+	void Update ()
+    {
+        Debug.Log(allowShot);
+        //Debug Shoot code, can't test on pc using the thumbstick and buttons so we need keyboard controls
+        if(Input.GetKey(KeyCode.Space)&& allowShot && Time.time > nextShot)
+        {
+            nextShot = Time.time + shotInterval;
+            Shoot();
+        }
+        if(allowShot && Time.time>nextShot)
+        {
+            nextShot = Time.time + shotInterval;
+            Shoot();
+        }
+    }
+
+    //movement should be tied to framerate, called at exact points in the games FPS
+    private void FixedUpdate()
+    {
+        if (moveJoystick.inputDirection != Vector3.zero)
         {
             //get the joystick direction, and move in that direction, Time.deltaTime used to tie the calculation to framerate
             Vector3 movement = moveJoystick.inputDirection.normalized * moveSpeed * Time.deltaTime;
             //check if the future position is within bounds
-            controller.MovePosition(GameArea.sharedInstance.CheckPosition(controller.transform.position + movement, moveJoystick.inputDirection.normalized, shipWidth));
+            controller.MovePosition(controller.transform.position + movement);
         }
-        //Debug Shoot code, can't test on pc using the thumbstick and buttons so we need keyboard controls
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            Shoot();
-        }
+    }
+
+    public void AllowShooting()
+    {
+        allowShot = true;
+    }
+
+    public void DisableShooting()
+    {
+        allowShot = false;
     }
 
     public void Shoot()

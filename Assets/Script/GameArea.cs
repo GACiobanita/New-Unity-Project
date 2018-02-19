@@ -22,11 +22,6 @@ public class GameArea : MonoBehaviour
         sharedInstance = this;
     }
 
-    private void Start()
-    {
-        CreateArenaBoundaries();
-    }
-
     //don't forget to make it so they are at they properly position at the edge of the 66% of the screen area
     //this is too hardcoded
     public void CreateArenaBoundaries()
@@ -49,41 +44,10 @@ public class GameArea : MonoBehaviour
         gameBounds[1].transform.position = gameCamera.ScreenToWorldPoint(new Vector2(gameCamera.pixelWidth / 2, 0.0f));
         gameBounds[1].GetComponent<BoxCollider2D>().size = new Vector2(gameCamera.orthographicSize * 2 * gameCamera.aspect, 0.1f);
         //left
-        gameBounds[2].transform.position = gameCamera.ScreenToWorldPoint(new Vector2(gameCamera.pixelWidth, gameCamera.pixelHeight / 2));
+        gameBounds[2].transform.position = gameCamera.ScreenToWorldPoint(new Vector2(gameCamera.pixelWidth*0.17f, gameCamera.pixelHeight / 2));
         gameBounds[2].GetComponent<BoxCollider2D>().size = new Vector2(0.1f, gameCamera.orthographicSize * 2);
         //right
-        gameBounds[3].transform.position = gameCamera.ScreenToWorldPoint(new Vector2(0.83f, gameCamera.pixelHeight / 2));
+        gameBounds[3].transform.position = gameCamera.ScreenToWorldPoint(new Vector2(gameCamera.pixelWidth-gameCamera.pixelWidth * 0.17f, gameCamera.pixelHeight / 2));
         gameBounds[3].GetComponent<BoxCollider2D>().size = new Vector2(0.1f, gameCamera.orthographicSize * 2);
-    }
-
-    //check if the passed vector3 is between screen bounds
-    //could use some extra touches
-    public Vector3 CheckPosition(Vector3 objPos, Vector3 objDir, float objSize)
-    {
-        //transform the passed vector3 into a screen coordinate with values between 0 and 1 on all axis
-        Vector3 viewportPosition = gameCamera.WorldToViewportPoint(objPos);
-        viewportPosition = new Vector2(Mathf.Clamp01(viewportPosition.x), Mathf.Clamp01(viewportPosition.y));
-        //direction based movement check
-        if(objDir.x<0)
-        {
-            if (viewportPosition.x < 0.17f)
-                viewportPosition.x = 0.17f;
-        }
-        else
-        {
-            if (viewportPosition.x > 0.83f)
-                viewportPosition.x = 0.83f;
-        }
-        if(objDir.y<0)
-        {
-            if (viewportPosition.y == 0.0f)
-                viewportPosition.y = 0.0f;
-        }
-        else
-        {
-            if (viewportPosition.y == 1.0f)
-                viewportPosition.y = 1.0f;
-        }
-        return gameCamera.ViewportToWorldPoint(viewportPosition);
     }
 }
