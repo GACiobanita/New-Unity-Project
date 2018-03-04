@@ -15,11 +15,44 @@ public class GameArea : MonoBehaviour
     public List<GameObject> gameBounds;
     //value used to make user that the bounds cover the entire edge of the screen
     public float boundsOverhand;
+    public GameObject playerShip;
+    public GameObject enemyShip;
+    public GameObject playerBullet;
+    public GameObject enemyBullet;
 
     private void Awake()
     {
         //when this is activated
         sharedInstance = this;
+    }
+
+    private void Start()
+    {
+        GetResources();
+        PrepareObjectPooler();
+        ObjectPooler.sharedInstance.TriggerObjectPooling();
+        CreatePlayer();
+    }
+
+    public void GetResources()
+    {
+        playerShip = Resources.Load("playerShip") as GameObject;
+        enemyShip = Resources.Load("enemy1") as GameObject;
+        playerBullet = Resources.Load("bullet") as GameObject;
+        enemyBullet = Resources.Load("enemyBullet") as GameObject;
+    }
+
+    void CreatePlayer()
+    {
+        Vector2 shipPos = gameCamera.ScreenToWorldPoint(new Vector2(gameCamera.pixelWidth / 2, gameCamera.pixelHeight/4));
+        playerShip.GetComponent<ShipControl>().moveJoystick = GameObject.FindGameObjectWithTag("MovementController").GetComponent<VirtualJoystick>();
+        playerShip = Instantiate(playerShip, shipPos ,Quaternion.identity);
+    }
+
+    public void PrepareObjectPooler()
+    {
+        ObjectPooler.sharedInstance.AddItemToPool(playerBullet, 2, true);
+        ObjectPooler.sharedInstance.AddItemToPool(enemyBullet, 2, true);
     }
 
     //don't forget to make it so they are at they properly position at the edge of the 66% of the screen area
@@ -39,15 +72,15 @@ public class GameArea : MonoBehaviour
         //aka
         //half the size of the current view
         //The horizontal size of the viewing volume depends on the aspect ratio: width*aspectratio
-        gameBounds[0].GetComponent<BoxCollider2D>().size = new Vector2(gameCamera.orthographicSize * 2 * gameCamera.aspect, 0.1f);
+        gameBounds[0].GetComponent<BoxCollider2D>().size = new Vector2(gameCamera.orthographicSize * 2 * gameCamera.aspect+ boundsOverhand, 0.1f);
         //bottom
         gameBounds[1].transform.position = gameCamera.ScreenToWorldPoint(new Vector2(gameCamera.pixelWidth / 2, 0.0f));
-        gameBounds[1].GetComponent<BoxCollider2D>().size = new Vector2(gameCamera.orthographicSize * 2 * gameCamera.aspect, 0.1f);
+        gameBounds[1].GetComponent<BoxCollider2D>().size = new Vector2(gameCamera.orthographicSize * 2 * gameCamera.aspect + boundsOverhand, 0.1f);
         //left
         gameBounds[2].transform.position = gameCamera.ScreenToWorldPoint(new Vector2(gameCamera.pixelWidth*0.17f, gameCamera.pixelHeight / 2));
-        gameBounds[2].GetComponent<BoxCollider2D>().size = new Vector2(0.1f, gameCamera.orthographicSize * 2);
+        gameBounds[2].GetComponent<BoxCollider2D>().size = new Vector2(0.1f, gameCamera.orthographicSize * 2+ boundsOverhand);
         //right
         gameBounds[3].transform.position = gameCamera.ScreenToWorldPoint(new Vector2(gameCamera.pixelWidth-gameCamera.pixelWidth * 0.17f, gameCamera.pixelHeight / 2));
-        gameBounds[3].GetComponent<BoxCollider2D>().size = new Vector2(0.1f, gameCamera.orthographicSize * 2);
+        gameBounds[3].GetComponent<BoxCollider2D>().size = new Vector2(0.1f, gameCamera.orthographicSize * 2+ boundsOverhand);
     }
 }

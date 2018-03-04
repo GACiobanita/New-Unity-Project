@@ -32,9 +32,8 @@ public class ShipControl : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        Debug.Log(allowShot);
         //Debug Shoot code, can't test on pc using the thumbstick and buttons so we need keyboard controls
-        if(Input.GetKey(KeyCode.Space)&& allowShot && Time.time > nextShot)
+        if(Input.GetKey(KeyCode.Space) && Time.time > nextShot)
         {
             nextShot = Time.time + shotInterval;
             Shoot();

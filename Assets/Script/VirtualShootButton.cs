@@ -7,7 +7,8 @@ public class VirtualShootButton : MonoBehaviour, IPointerDownHandler, IPointerUp
 {
     public virtual void OnPointerDown(PointerEventData ped)
     {
-        ShipControl.sharedInstance.AllowShooting();
+        if(Time.timeScale==1.0f)
+            ShipControl.sharedInstance.AllowShooting();
     }
 
     //function called in the unity inspector, set in the object itself

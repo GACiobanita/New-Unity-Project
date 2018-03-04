@@ -8,6 +8,13 @@ public class ObjectPoolItem
     public GameObject objectToPool;
     public int amountToPool;
     public bool shouldExpand = true;
+
+    public ObjectPoolItem(GameObject go, int amount, bool allowExpansion)
+    {
+        objectToPool = go;
+        amountToPool = amount;
+        shouldExpand = allowExpansion;
+    }
 }
 
 public class ObjectPooler : MonoBehaviour {
@@ -17,17 +24,23 @@ public class ObjectPooler : MonoBehaviour {
     public List<GameObject> pooledObjects;
     public List<ObjectPoolItem> itemsToPool;
 
-    void Awake()
+    public void Awake()
     {
         sharedInstance = this;
     }
 
-    // Use this for initialization
-    void Start () {
+    public void AddItemToPool(GameObject go, int amount, bool allowExpansion)
+    {
+        ObjectPoolItem newItem=new ObjectPoolItem(go, amount, allowExpansion);
+        itemsToPool.Add(newItem);
+    }
+
+    public void TriggerObjectPooling()
+    {
         pooledObjects = new List<GameObject>();
-        foreach(ObjectPoolItem item in itemsToPool)//iterate through all instances of objectpoolitem
+        foreach (ObjectPoolItem item in itemsToPool)//iterate through all instances of objectpoolitem
         {
-            for(int i=0; i<item.amountToPool; i++)
+            for (int i = 0; i < item.amountToPool; i++)
             {
                 GameObject obj = (GameObject)Instantiate(item.objectToPool);
                 obj.SetActive(false);

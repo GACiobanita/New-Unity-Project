@@ -9,6 +9,8 @@ using System.Collections.Generic;
 public class VirtualJoystick : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler
 {
     //joystick images
+    public bool deadzoneActive = false;
+    public float deadzoneMagnitude = 0.4f;
     private Image bgImg;
     private Image joyImg;
 
@@ -31,7 +33,7 @@ public class VirtualJoystick : MonoBehaviour, IDragHandler, IPointerDownHandler,
         //have a position vector
         Vector2 pos = Vector2.zero;
         //calculate the position of the player finger
-        if(RectTransformUtility.ScreenPointToLocalPointInRectangle(bgImg.rectTransform,ped.position, ped.pressEventCamera, out pos))
+        if(RectTransformUtility.ScreenPointToLocalPointInRectangle(bgImg.rectTransform,ped.position, ped.pressEventCamera, out pos) && (Time.timeScale==1.0f))
         {
             //compare against the background image
             pos.x = pos.x / bgImg.rectTransform.sizeDelta.x;
@@ -50,6 +52,15 @@ public class VirtualJoystick : MonoBehaviour, IDragHandler, IPointerDownHandler,
             //also move the joystick image to match the finger location against the background image
             //while also staying inside the bgImg
             joyImg.rectTransform.anchoredPosition = new Vector3(inputDirection.x * (bgImg.rectTransform.sizeDelta.x / 3), inputDirection.y * (bgImg.rectTransform.sizeDelta.y / 3));
+
+            //attempt
+            if (deadzoneActive)
+            {
+                if(inputDirection.magnitude<deadzoneMagnitude)
+                {
+                    inputDirection = Vector2.zero;
+                }
+            }
         }
     }
 
