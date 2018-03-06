@@ -15,10 +15,15 @@ public class GameArea : MonoBehaviour
     public List<GameObject> gameBounds;
     //value used to make user that the bounds cover the entire edge of the screen
     public float boundsOverhand;
+    //should replace this with a special list that also has: size, the bool for list expansion in the object pooler, and the gameobject
+    //very bad
     public GameObject playerShip;
     public GameObject enemyShip;
     public GameObject playerBullet;
     public GameObject enemyBullet;
+    public GameObject scoreSprite;
+    public Text scoreText;
+    private float gameScore=0.0f;
 
     private void Awake()
     {
@@ -28,6 +33,7 @@ public class GameArea : MonoBehaviour
 
     private void Start()
     {
+        gameScore = 0;
         GetResources();
         PrepareObjectPooler();
         ObjectPooler.sharedInstance.TriggerObjectPooling();
@@ -40,6 +46,7 @@ public class GameArea : MonoBehaviour
         enemyShip = Resources.Load("enemy1") as GameObject;
         playerBullet = Resources.Load("bullet") as GameObject;
         enemyBullet = Resources.Load("enemyBullet") as GameObject;
+        scoreSprite = Resources.Load("+100") as GameObject;
     }
 
     void CreatePlayer()
@@ -53,6 +60,8 @@ public class GameArea : MonoBehaviour
     {
         ObjectPooler.sharedInstance.AddItemToPool(playerBullet, 2, true);
         ObjectPooler.sharedInstance.AddItemToPool(enemyBullet, 2, true);
+        ObjectPooler.sharedInstance.AddItemToPool(enemyShip, 2, true);
+        ObjectPooler.sharedInstance.AddItemToPool(scoreSprite, 2, true);
     }
 
     //don't forget to make it so they are at they properly position at the edge of the 66% of the screen area
@@ -82,5 +91,18 @@ public class GameArea : MonoBehaviour
         //right
         gameBounds[3].transform.position = gameCamera.ScreenToWorldPoint(new Vector2(gameCamera.pixelWidth-gameCamera.pixelWidth * 0.17f, gameCamera.pixelHeight / 2));
         gameBounds[3].GetComponent<BoxCollider2D>().size = new Vector2(0.1f, gameCamera.orthographicSize * 2+ boundsOverhand);
+    }
+
+    public void UpdateScore(float amount)
+    {
+        gameScore += amount;
+        scoreText.text = gameScore.ToString();
+    }
+
+    public void ScorePrompt(Vector3 pos)
+    {
+        GameObject flavour = ObjectPooler.sharedInstance.GetPooledObject("Flavour");
+        flavour.transform.position = pos;
+        flavour.SetActive(true);
     }
 }

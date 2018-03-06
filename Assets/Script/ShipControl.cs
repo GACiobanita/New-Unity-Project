@@ -5,9 +5,14 @@ using UnityEngine;
 public class ShipControl : MonoBehaviour {
 
     public static ShipControl sharedInstance;
-    public float moveSpeed=5.0f;
-    //real drag?
-    public float drag=0.5f;
+    public float maxSpeed = 5.0f;
+    public float startSpeed=3.0f;
+    public float speedIncrement = 0.1f;
+    public float accelerationInterval = 0.2f;
+    //remove in final version 
+    public bool decelerate = true;
+    float currentSpeed = 0.0f;
+    float accelerationTime = 0.0f;
     //get input from the move joystick, aka the direction the joystick is pointing towards
     public VirtualJoystick moveJoystick;
     //the "gatling gun" from which the bullets are launched from
@@ -27,6 +32,7 @@ public class ShipControl : MonoBehaviour {
         //get the ship's rigidbody2d component, setting it in the controller variable
         controller = GetComponent<Rigidbody2D>();
         sharedInstance = this;
+        currentSpeed = startSpeed;
 	}
 	
 	// Update is called once per frame
@@ -51,9 +57,35 @@ public class ShipControl : MonoBehaviour {
         if (moveJoystick.inputDirection != Vector3.zero)
         {
             //get the joystick direction, and move in that direction, Time.deltaTime used to tie the calculation to framerate
-            Vector3 movement = moveJoystick.inputDirection.normalized * moveSpeed * Time.deltaTime;
+            Vector3 movement = moveJoystick.inputDirection.normalized * currentSpeed * Time.deltaTime;
             //check if the future position is within bounds
             controller.MovePosition(controller.transform.position + movement);
+            if(Time.time>accelerationTime&& currentSpeed<maxSpeed)
+            {
+                accelerationTime = Time.time + accelerationInterval;
+                currentSpeed = currentSpeed + speedIncrement;
+                if (currentSpeed > maxSpeed)
+                    currentSpeed = maxSpeed;
+                //Debug.Log("Accelerated speed: " + currentSpeed);
+            }
+        }
+        else
+        {
+            if (decelerate)
+            {
+                    if (Time.time > accelerationTime && currentSpeed > startSpeed)
+                    {
+                        accelerationTime = Time.time + accelerationInterval;
+                        currentSpeed = currentSpeed - speedIncrement;
+                        if (currentSpeed <startSpeed)
+                            currentSpeed = startSpeed;
+                        Debug.Log("Deceleration speed: " + currentSpeed);
+                    }
+            }
+            else
+            {
+                currentSpeed = startSpeed;
+            }
         }
     }
 
@@ -80,6 +112,14 @@ public class ShipControl : MonoBehaviour {
             //will go in the direction the gatling gun is pointing towards
             bullet.transform.rotation = bulletSpawnPoint.transform.rotation;
             bullet.SetActive(true);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.tag=="EnemyBullet")
+        {
+            collision.gameObject.SetActive(false);
         }
     }
 }

@@ -11,6 +11,7 @@ public class VirtualJoystick : MonoBehaviour, IDragHandler, IPointerDownHandler,
     //joystick images
     public bool deadzoneActive = false;
     public float deadzoneMagnitude = 0.4f;
+    public static VirtualJoystick sharedInstance;
     private Image bgImg;
     private Image joyImg;
 
@@ -25,6 +26,7 @@ public class VirtualJoystick : MonoBehaviour, IDragHandler, IPointerDownHandler,
         joyImg = transform.GetChild(0).GetComponentInChildren<Image>();
         //zero just to be sure
         inputDirection = Vector3.zero;
+        sharedInstance = this;
     }
 
     //when the joystick is moving
