@@ -4,22 +4,33 @@ using UnityEngine;
 
 public class Turret : MonoBehaviour {
 
-    //public enum shootingType
-    //{
-    //    none, repeater, burst
-    //}
-    //public shootingType turretType;
     public float shotInterval = 0f;
     public float burstInterval = 0f;
     public float burstDelay = 0f;
     float nextShot = 0.0f;
     float nextBurst = 0.0f;
     public float burstSize = 0f;
+    public enum BulletType
+    {
+        none, EnemyBullet, PlayerBullet
+    }
+    public BulletType usedBulletType;
+    string bulletType="None";
 
     // Use this for initialization
     void Start ()
     {
-
+        switch(usedBulletType)
+        {
+            case 0:
+                break;
+            case BulletType.EnemyBullet:
+                bulletType = "EnemyBullet";
+                break;
+            case BulletType.PlayerBullet:
+                bulletType = "PlayerBullet";
+                break;
+        }
     }
 	
 	// Update is called once per frame
@@ -31,7 +42,7 @@ public class Turret : MonoBehaviour {
     public void GetBullet()
     {
         //get a bullet from the pool, search by tag set in the unity inspector, on the prefab
-        GameObject bullet = ObjectPooler.sharedInstance.GetPooledObject("EnemyBullet");
+        GameObject bullet = ObjectPooler.sharedInstance.GetPooledObject(bulletType);
         //just to be sure we aren't firing blanks
         if (bullet != null)
         {

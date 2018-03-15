@@ -15,7 +15,7 @@ public class BasicBulletMovement : MonoBehaviour {
         //get the bullet's rigidbody2d component, setting it in the controller variable
         controller = this.transform.GetComponent<Rigidbody2D>();
         //and set its velocity
-        controller.velocity = this.transform.right * moveSpeed;
+        controller.velocity = this.transform.up * moveSpeed;
     }
 
     //automatically called once the object is offscreen, or outside of the camera bounds, becoming invisible

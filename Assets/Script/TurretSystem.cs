@@ -35,7 +35,6 @@ public class TurretSystem : MonoBehaviour {
         {
             UpdateTurretTarget();
         }
-        ShootingRoutine();
     }
 
     void UpdateTurretTarget()
@@ -63,7 +62,8 @@ public class TurretSystem : MonoBehaviour {
         }
     }
 
-    void ShootingRoutine()
+    //should be called in the enemy script
+    public void ShootingRoutine()
     {
         foreach(TurretObjects turret in turretList)
         {

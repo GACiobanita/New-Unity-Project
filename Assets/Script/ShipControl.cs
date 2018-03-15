@@ -15,8 +15,6 @@ public class ShipControl : MonoBehaviour {
     float accelerationTime = 0.0f;
     //get input from the move joystick, aka the direction the joystick is pointing towards
     public VirtualJoystick moveJoystick;
-    //the "gatling gun" from which the bullets are launched from
-    public GameObject bulletSpawnPoint;
     //the rigidbody2d component of the ship
     private Rigidbody2D controller;
     //firerate interval, less means faster
@@ -24,12 +22,14 @@ public class ShipControl : MonoBehaviour {
     float nextShot = 0.0f;
     //trigger shooting from the UI shoot button
     bool allowShot = false;
+    TurretSystem attachTurretSystem;
 
     // Use this for initialization
     void Start () {
         //lastPosition = Vector3.zero;
         //speed = 0.0f;
         //get the ship's rigidbody2d component, setting it in the controller variable
+        attachTurretSystem = this.GetComponent<TurretSystem>();
         controller = GetComponent<Rigidbody2D>();
         sharedInstance = this;
         currentSpeed = startSpeed;
@@ -39,15 +39,15 @@ public class ShipControl : MonoBehaviour {
 	void Update ()
     {
         //Debug Shoot code, can't test on pc using the thumbstick and buttons so we need keyboard controls
-        if(Input.GetKey(KeyCode.Space) && Time.time > nextShot)
+        if (Input.GetKey(KeyCode.Space) && Time.time > nextShot)
         {
             nextShot = Time.time + shotInterval;
-            Shoot();
+            attachTurretSystem.ShootingRoutine();
         }
-        if(allowShot && Time.time>nextShot)
+        if (allowShot && Time.time > nextShot)
         {
             nextShot = Time.time + shotInterval;
-            Shoot();
+            attachTurretSystem.ShootingRoutine();
         }
     }
 
@@ -89,6 +89,11 @@ public class ShipControl : MonoBehaviour {
         }
     }
 
+    public void Shoot()
+    {
+
+    }
+
     public void AllowShooting()
     {
         allowShot = true;
@@ -97,22 +102,6 @@ public class ShipControl : MonoBehaviour {
     public void DisableShooting()
     {
         allowShot = false;
-    }
-
-    public void Shoot()
-    {
-        //get a bullet from the pool, search by tag set in the unity inspector, on the prefab
-        GameObject bullet = ObjectPooler.sharedInstance.GetPooledObject("PlayerBullet");
-        //just to be sure we aren't firing blanks
-        if (bullet != null)
-        {
-            //set the bullet's start position at the location of the bullet spawn point
-            //bullet spawn point is a child object used only for the purpose of spawning bullets, think of it as a gatling gun
-            bullet.transform.position = bulletSpawnPoint.transform.position;
-            //will go in the direction the gatling gun is pointing towards
-            bullet.transform.rotation = bulletSpawnPoint.transform.rotation;
-            bullet.SetActive(true);
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

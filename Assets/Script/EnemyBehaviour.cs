@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyMovement : MonoBehaviour {
+public class EnemyBehaviour : MonoBehaviour
+{
 
     private Rigidbody2D controller;
     public Vector3 direction;
@@ -10,21 +11,21 @@ public class EnemyMovement : MonoBehaviour {
 
     private void Awake()
     {
-        
+
     }
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         direction = Vector3.down;
         controller = GetComponent<Rigidbody2D>();
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update()
     {
         MoveShip();
-	}
+    }
 
     void MoveShip()
     {
@@ -41,7 +42,7 @@ public class EnemyMovement : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag=="PlayerBullet")
+        if (collision.tag == "PlayerBullet")
         {
             this.gameObject.SetActive(false);
             collision.gameObject.SetActive(false);

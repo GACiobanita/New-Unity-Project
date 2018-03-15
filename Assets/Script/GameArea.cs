@@ -21,7 +21,6 @@ public class GameArea : MonoBehaviour
     public GameObject enemyShip;
     public GameObject playerBullet;
     public GameObject enemyBullet;
-    public GameObject scoreSprite;
     public Text scoreText;
     private float gameScore=0.0f;
 
@@ -40,13 +39,17 @@ public class GameArea : MonoBehaviour
         CreatePlayer();
     }
 
+    private void Update()
+    {
+        Debug.DrawLine(gameCamera.ScreenToWorldPoint(new Vector2(gameCamera.pixelWidth * 0.17f, gameCamera.pixelHeight / 2)), gameCamera.ScreenToWorldPoint(new Vector2(gameCamera.pixelWidth - gameCamera.pixelWidth * 0.17f, gameCamera.pixelHeight / 2)), Color.red, 1000, true);
+    }
+
     public void GetResources()
     {
         playerShip = Resources.Load("playerShip") as GameObject;
         enemyShip = Resources.Load("enemy1") as GameObject;
         playerBullet = Resources.Load("bullet") as GameObject;
         enemyBullet = Resources.Load("enemyBullet") as GameObject;
-        scoreSprite = Resources.Load("+100") as GameObject;
     }
 
     void CreatePlayer()
@@ -61,7 +64,6 @@ public class GameArea : MonoBehaviour
         ObjectPooler.sharedInstance.AddItemToPool(playerBullet, 2, true);
         ObjectPooler.sharedInstance.AddItemToPool(enemyBullet, 2, true);
         ObjectPooler.sharedInstance.AddItemToPool(enemyShip, 2, true);
-        ObjectPooler.sharedInstance.AddItemToPool(scoreSprite, 2, true);
     }
 
     //don't forget to make it so they are at they properly position at the edge of the 66% of the screen area

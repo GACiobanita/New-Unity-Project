@@ -17,12 +17,18 @@ public class CameraPixelDensity : MonoBehaviour {
 	// Update is called once per frame
 	void Awake () {
         //scale the camera size by the targetWidth using the current hardware screen
-        int height = Mathf.RoundToInt(targetWidth / (float)Screen.width * Screen.height);
-        GetComponent<Camera>().orthographicSize = height / pixelToUnits / 2;
+        //int height = Mathf.RoundToInt(targetWidth / (float)Screen.width * Screen.height);
+        //GetComponent<Camera>().orthographicSize = height / pixelToUnits / 2;
         //this explains the procedure, https://www.youtube.com/watch?v=eIHqe8opFoU
 
         //create the game area bounds
-        if(SceneManager.GetActiveScene()==SceneManager.GetSceneByName("test"))
+        //if(SceneManager.GetActiveScene()==SceneManager.GetSceneByName("test"))
+        //    GameArea.sharedInstance.CreateArenaBoundaries();
+    }
+
+    private void Start()
+    {
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("test"))
             GameArea.sharedInstance.CreateArenaBoundaries();
     }
 }
