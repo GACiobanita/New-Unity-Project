@@ -1,0 +1,17 @@
+1_32
+enemySpikes_enemyDoubleTurret_enemyFourSpin_enemySingleTurret_enemyDoubleSlow
+3.24,6.29125_0_0_enemySpikes_1_1_1
+-3.76,6.321249_0_0_enemySpikes_1_1_1
+-5.5,8.912498_2_-4.25,11.3325_-1.11,11.3425_0_enemyDoubleTurret_1.5_1.5_1.5
+5.819999,9.122497_2_4.63,11.3125_1.42,11.3025_0_enemyDoubleTurret_1_1_1
+0.1434993,16.75177_0_0_enemyFourSpin_1_1_1
+-3.669499,18.59677_1_3.443998,20.25727_0_enemySpikes_2_2_2
+3.566999,18.71977_1_-3.218499,20.09327_0_enemySpikes_2_2_2
+-1.885999,25.64299_0_0_enemySingleTurret_2_2_2
+-0.7379994,25.70449_0_0_enemySingleTurret_2_2_2
+0.4920001,25.64299_0_0_enemySingleTurret_2_2_2
+1.434999,25.62249_0_0_enemySingleTurret_2_2_2
+-5.637497,28.7885_2_-3.197998,27.2305_-1.496499,30.2645_0_enemyDoubleSlow_1_1_1
+5.001998,28.6655_2_3.874499,26.5335_3.259499,30.8795_0_enemyDoubleSlow_1_1_1
+4.960997,29.342_2_2.562497,27.497_0.697,29.5265_0_enemyDoubleSlow_1_1_1
+-0.06149982,35.006_0_0_enemyDoubleSlow_1_1_1
