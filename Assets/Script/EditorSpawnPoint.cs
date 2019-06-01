@@ -158,16 +158,19 @@ public class EditorSpawnPoint : GameSpawnPoint
     }
 
     //functionality needed for editor testing
-    public override void SpawnEnemy()
+    public override void SpawnObject()
     {
         //setup enemy pathing using only a list of vector2 positions, and a bool for looping
-        attachedObj.GetComponent<Enemy>().SetupPathing(this.PassPoints(), routeRenderer.loop);
-        if (eBaseSpeed != 0 && eLoopSpeed != 0 && eOolSpeed != 0)
-        { 
-            //setup the values
-            attachedObj.GetComponent<Enemy>().baseSpeed = eBaseSpeed;
-            attachedObj.GetComponent<Enemy>().loopSpeed = eLoopSpeed;
-            attachedObj.GetComponent<Enemy>().outOfLoopSpeed = eOolSpeed;
+        if (attachedObj.tag == "Enemy")
+        {
+            attachedObj.GetComponent<Enemy>().SetupPathing(this.PassPoints(), routeRenderer.loop);
+            if (eBaseSpeed != 0 && eLoopSpeed != 0 && eOolSpeed != 0)
+            {
+                //setup the values
+                attachedObj.GetComponent<Enemy>().baseSpeed = eBaseSpeed;
+                attachedObj.GetComponent<Enemy>().loopSpeed = eLoopSpeed;
+                attachedObj.GetComponent<Enemy>().outOfLoopSpeed = eOolSpeed;
+            }
         }
         //attached obj pos is the spawn points pos
         attachedObj.transform.position = this.transform.position;
@@ -180,7 +183,7 @@ public class EditorSpawnPoint : GameSpawnPoint
     {
         if(collision.tag=="SpawnBoundary")
         {
-            SpawnEnemy();
+            SpawnObject();
         }
     }
 
@@ -191,9 +194,12 @@ public class EditorSpawnPoint : GameSpawnPoint
         //get object from the pooler
         attachedObj = ObjectPooler.sharedInstance.GetPooledObject(objName);
         //and the entity's default speed values
-        eBaseSpeed = attachedObj.GetComponent<Enemy>().baseSpeed;
-        eLoopSpeed = attachedObj.GetComponent<Enemy>().loopSpeed;
-        eOolSpeed = attachedObj.GetComponent<Enemy>().outOfLoopSpeed;
+        if (attachedObj.tag == "Enemy")
+        {
+            eBaseSpeed = attachedObj.GetComponent<Enemy>().baseSpeed;
+            eLoopSpeed = attachedObj.GetComponent<Enemy>().loopSpeed;
+            eOolSpeed = attachedObj.GetComponent<Enemy>().outOfLoopSpeed;
+        }
     }
 
     //method used to turn the points invisible in play mode, only the spawnpoint is visible

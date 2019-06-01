@@ -15,6 +15,7 @@ public class Animate : MonoBehaviour {
 
     //at what animation frame is the ship currently at
     SpriteRenderer sr;
+    [HideInInspector]
     public AnimStates currentState = AnimStates.Idle;
     //a list of the animation frames
     //when setting up the list in the editor follow the same 
@@ -30,6 +31,7 @@ public class Animate : MonoBehaviour {
     //the game object this script is attached to
     public GameObject go;
     //move joystick input in order to determine which animation frame should happen
+    [HideInInspector]
     public VirtualJoystick moveJoystick;
     bool animating = false;
 
@@ -38,14 +40,14 @@ public class Animate : MonoBehaviour {
         sr = this.GetComponent<SpriteRenderer>();
     }
 
-    private void Update()
+    public void ShipAnim()
     {
         //this would only work for horizontal animation
         //if there is input from the joystick
-        if(moveJoystick.inputDirection!=Vector3.zero)
+        if (moveJoystick.inputDirection != Vector3.zero)
         {
             //if the joystick/ship movement is towards the right direction, x++
-            if(moveJoystick.inputDirection.x>0.0f)
+            if (moveJoystick.inputDirection.x > 0.0f)
             {
                 //start the timer for the right animation frames
                 rightTimer += Time.deltaTime;
@@ -55,12 +57,12 @@ public class Animate : MonoBehaviour {
             else
             {
                 //the left direction, x--
-                if(moveJoystick.inputDirection.x<0.0f)
+                if (moveJoystick.inputDirection.x < 0.0f)
                 {
                     //reset the timer for the right anim frames
                     rightTimer = 0.0f;
                     //start the timer for the left anim frames
-                    leftTimer +=Time.deltaTime;
+                    leftTimer += Time.deltaTime;
                 }
             }
         }
@@ -156,7 +158,20 @@ public class Animate : MonoBehaviour {
             yield return null;
         }
         animating = false;
+    }
 
+    public IEnumerator HeadToObj(Transform go, float time)
+    {
+        animating = true;
+        Vector3 A = this.transform.position;
+        float t = 0.0f;
+        while (t < 1.0f)
+        {
+            t += Time.deltaTime / time;
+            this.transform.position = Vector3.Lerp(A, go.transform.position, t);
+            yield return null;
+        }
+        animating = false;
     }
 
     public bool IsAnimating()

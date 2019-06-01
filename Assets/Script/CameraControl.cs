@@ -7,12 +7,17 @@ public class CameraControl : MonoBehaviour {
 
     public static CameraControl sharedInstance;
     public float cameraSpeed=2.0f;
+    public float constraint = 0.17f;
+    public float leftScreenConstraint;
+    public float rightScreenConstraint;
     Vector3 cameraEndPos;
     bool shouldMove=false;
 
     private void Awake()
     {
         sharedInstance = this;
+        leftScreenConstraint = Camera.main.ScreenToWorldPoint(Vector3.zero).x;
+        rightScreenConstraint = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0.0f)).x;
     }
 
     private void Update()
@@ -76,16 +81,17 @@ public class CameraControl : MonoBehaviour {
         return false;    
     }
 
-    bool XAxisConstraint(Vector3 pos, float objWidth)
+    public bool XAxisConstraint(Vector3 pos, float objWidth)
     {
         Vector3 leftPos = Camera.main.WorldToScreenPoint(new Vector2(pos.x - objWidth / 2, pos.y));
         Vector3 rightPos = Camera.main.WorldToScreenPoint(new Vector2(pos.x + objWidth / 2, pos.y));
-        if(Camera.main.pixelWidth * 0.17f < leftPos.x && Camera.main.pixelWidth - Camera.main.pixelWidth * 0.17f > rightPos.x)
-                return true;
+        ////if(Camera.main.pixelWidth * constraint < leftPos.x && Camera.main.pixelWidth - Camera.main.pixelWidth * constraint > rightPos.x)
+        if (leftScreenConstraint < leftPos.x && rightScreenConstraint > rightPos.x)
+            return true;
         return false;
     }
 
-    bool YAxisConstraint(Vector3 pos, float objHeight)
+    public bool YAxisConstraint(Vector3 pos, float objHeight)
     {
         Vector3 topPos = Camera.main.WorldToScreenPoint(new Vector2(pos.x, pos.y + objHeight/2));
         Vector3 botPos = Camera.main.WorldToScreenPoint(new Vector2(pos.x, pos.y - objHeight / 2));

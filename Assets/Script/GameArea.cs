@@ -78,6 +78,9 @@ public class GameArea : MonoBehaviour
         ObjectPooler.sharedInstance.AddItemToPool(Resources.Load("enemyFourSpin") as GameObject, 2, true);
         ObjectPooler.sharedInstance.AddItemToPool(Resources.Load("enemySingleTurret") as GameObject, 2, true);
         ObjectPooler.sharedInstance.AddItemToPool(Resources.Load("enemySpikes") as GameObject, 2, true);
+        ObjectPooler.sharedInstance.AddItemToPool(Resources.Load("PowerUpSpeed") as GameObject, 2, true);
+        ObjectPooler.sharedInstance.AddItemToPool(Resources.Load("PowerUpShield") as GameObject, 1, true);
+        ObjectPooler.sharedInstance.AddItemToPool(Resources.Load("Shield") as GameObject, 1, true);
     }
 
     public void LoadPlayer()
@@ -89,6 +92,7 @@ public class GameArea : MonoBehaviour
         playerShip.GetComponent<ShipControl>().SetOrigin(shipSpawnPoint);
         playerShip.GetComponent<ShipControl>().SetEntry(shipEntryPoint);
         playerShip = Instantiate(playerShip, shipSpawnPoint.position, Quaternion.identity, Camera.main.transform);
+        playerShip.GetComponent<ShipControl>().GetPlayerPrefValues(PlayerSave.sharedInstance.GetLives(), PlayerSave.sharedInstance.GetRoF(), PlayerSave.sharedInstance.GetShield());
     }
 
 
@@ -105,6 +109,7 @@ public class GameArea : MonoBehaviour
     public void EditorStart()
     {
         LoadPlayer();
+        playerShip.GetComponent<ShipControl>().EnterScene();
     }
 
     //editor end
@@ -188,6 +193,7 @@ public class GameArea : MonoBehaviour
     {
         scroll = false;
         playerShip.GetComponent<ShipControl>().ExitScene();
+        if (SceneManagement.sharedInstance.GetCurrentScene() == "test") 
         StartCoroutine(FadeInScene());
         yield return null;
     }

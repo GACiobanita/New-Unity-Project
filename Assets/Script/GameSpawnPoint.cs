@@ -38,7 +38,7 @@ public class GameSpawnPoint : MonoBehaviour
         return points;
     }
 
-    public virtual void SpawnEnemy()
+    public virtual void SpawnObject()
     {
         AddObject();
         //attached obj pos is the spawn points pos
@@ -52,7 +52,7 @@ public class GameSpawnPoint : MonoBehaviour
     {
         if (collision.tag == "SpawnBoundary")
         {
-            SpawnEnemy();
+            SpawnObject();
         }
     }
 
@@ -67,6 +67,14 @@ public class GameSpawnPoint : MonoBehaviour
         //get object from the pooler
         attachedObj = ObjectPooler.sharedInstance.GetPooledObject(objName);
         //and the entity's default speed values
+        if(attachedObj.tag=="Enemy")
+        {
+            EnemyObject();
+        }
+    }
+
+    public void EnemyObject()
+    {
         attachedObj.GetComponent<Enemy>().baseSpeed = eBaseSpeed;
         attachedObj.GetComponent<Enemy>().loopSpeed = eLoopSpeed;
         attachedObj.GetComponent<Enemy>().outOfLoopSpeed = eOolSpeed;

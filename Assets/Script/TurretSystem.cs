@@ -5,7 +5,7 @@ using UnityEngine;
 
 //a turret object class that will contain all information about turrets attached to the entity using
 //a turret system
-//main turret system uses a list of TurretObjects, each with their own valeus
+//main turret system uses a list of TurretObjects, each with their own values
 [System.Serializable]
 public class TurretObjects
 {
@@ -272,5 +272,13 @@ public class TurretSystem : MonoBehaviour {
     public void GetShipSpeed(float speed)
     {
         shipSpeed = speed;
+    }
+
+    public void SetShotInterval(float interval)
+    {
+        foreach(TurretObjects turret in turretList)
+        {
+            turret.shotInterval = interval;
+        }
     }
 }

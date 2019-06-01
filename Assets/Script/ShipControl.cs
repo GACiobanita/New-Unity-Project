@@ -26,15 +26,19 @@ public class ShipControl : MonoBehaviour {
     bool allowShot = false;
     TurretSystem attachTurretSystem;
     public int shipLives=3;
+    public int shieldArmor = 1;
     Animate animComponent;
     public float shipImmunity = 1.0f;
     public Transform originPos;
     public Transform entryPos;
+    float initMaxSpeed;
+    float initShotInterval;
 
     // Use this for initialization
     void Awake () {
-        //lastPosition = Vector3.zero;
-        //speed = 0.0f;
+        Debug.Log("nut1");
+        initMaxSpeed = maxSpeed;
+        initShotInterval = shotInterval;
         //get the ship's rigidbody2d component, setting it in the controller variable
         attachTurretSystem = this.GetComponent<TurretSystem>();
         controller = GetComponent<Rigidbody2D>();
@@ -46,7 +50,6 @@ public class ShipControl : MonoBehaviour {
         animComponent.go = this.gameObject;
         this.transform.GetChild(0).GetComponent<Animate>().moveJoystick = moveJoystick;
         this.transform.GetChild(0).GetComponent<Animate>().go=this.transform.GetChild(0).gameObject;
-
     }
 	
 	// Update is called once per frame
@@ -68,6 +71,7 @@ public class ShipControl : MonoBehaviour {
     //movement should be tied to framerate, called at exact points in the games FPS
     private void FixedUpdate()
     {
+        animComponent.ShipAnim();
         if (!animComponent.IsAnimating())
         {
             if (moveJoystick.inputDirection != Vector3.zero)
@@ -110,6 +114,7 @@ public class ShipControl : MonoBehaviour {
     public void AllowShooting()
     {
         allowShot = true;
+        attachTurretSystem.GetShipSpeed(currentSpeed);
     }
 
     public void DisableShooting()
@@ -148,7 +153,7 @@ public class ShipControl : MonoBehaviour {
     public void EnterScene()
     {
         this.GetComponent<BoxCollider2D>().enabled = false;
-        StartCoroutine(animComponent.HeadToPos(entryPos.transform.position, 0.5f));
+        StartCoroutine(animComponent.HeadToObj(entryPos, 0.5f));
         this.GetComponent<BoxCollider2D>().enabled = true;
     }
 
@@ -163,9 +168,10 @@ public class ShipControl : MonoBehaviour {
 
     public void Respawn()
     {
+        ResetToOriginalState();
         this.transform.position = originPos.transform.position;
         StartCoroutine(StopEnemyCollision());
-        StartCoroutine(animComponent.HeadToPos(entryPos.transform.position, 0.5f));
+        StartCoroutine(animComponent.HeadToObj(entryPos, 0.5f));
     }
 
     public void SetOrigin(Transform go)
@@ -176,5 +182,33 @@ public class ShipControl : MonoBehaviour {
     public void SetEntry(Transform go)
     {
         entryPos = go;
+    }
+
+    public void ResetToOriginalState()
+    {
+        maxSpeed = initMaxSpeed;
+        shotInterval = initShotInterval;
+    }
+
+    public void IncreaseShotInterval(float increase)
+    {
+        shotInterval += increase;
+    }
+
+    public void IncreaseMaxSpeed(float increase)
+    {
+        maxSpeed += increase;
+    }
+
+    public void GetPlayerPrefValues(float lives, float rof, float shield)
+    {
+        shipLives = (int)lives;
+        shieldArmor = (int)shield;
+        attachTurretSystem.SetShotInterval(rof);
+    }
+
+    public int GetShieldArmor()
+    {
+        return shieldArmor;
     }
 }
